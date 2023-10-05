@@ -1,11 +1,14 @@
 #!/bin/sh
 
-# func to added timestamps to echo
-log_message() {
-    local timestamp
-    timestamp=$(date "+%Y-%m-%d %H:%M:%S")
-    echo "[$timestamp] $1"
-}
+. /usr/local/bin/utils.sh
+
+# check internet connection
+check_intenet_connection
+check_dns_working
+
+# validate required variables exist
+check_env_var "ZONE_ID"
+check_env_var "API_TOKEN"
 
 # Redirect both stdout and stderr to /dev/stdout
 exec >/dev/stdout 2>&1
@@ -14,6 +17,9 @@ while true; do
 
   # get current ip
   current_ip=$(curl -s https://ifconfig.me)
+  # echo $current_ip
+  # ping -c 3 1.1.1.1
+  nslookup google.com
 
   # get current DNS record
   json_data=$(curl -s --request GET \
